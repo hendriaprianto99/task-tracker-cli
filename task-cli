@@ -1,0 +1,38 @@
+
+<?php
+
+$dataDir = __DIR__ . "/data";
+$data = $dataDir . "/task-tracker.json";
+
+if (!is_dir($dataDir)) {
+    mkdir($dataDir, 0777, true);
+}
+
+if (!file_exists($data)) {
+    file_put_contents($data, json_encode([]));
+}
+
+$existedTask = file_get_contents($data);
+$task = json_decode($existedTask, true);
+
+if (!is_array($task)) {
+    $task = [];
+}
+
+$newTask = [
+    "id" => 1,
+    "description" => $argv[2] ?? '',
+];
+
+$task[] = $newTask;
+
+// add
+switch ($argv[1] ?? '') {
+    case 'add':
+        file_put_contents($data, json_encode($task, JSON_PRETTY_PRINT));
+        break;
+
+    default:
+        echo "Command tidak dikenal.\n";
+        break;
+}
